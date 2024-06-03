@@ -64,7 +64,8 @@ def SPIELISPIELI_LOOP():
     blink_velocity = 2
     old = time.time_ns()
     time_since_start_of_program = 0
-    while True:
+    running = True
+    while running:
 
         now = time.time_ns()
         time_passed = (now - old) / 1e9
@@ -73,6 +74,8 @@ def SPIELISPIELI_LOOP():
 
         inputs = {}
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
             if event.type == pygame.KEYDOWN:
                 key_name = pygame.key.name(event.key)
                 _held_keys.append(key_name)
