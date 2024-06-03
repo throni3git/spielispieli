@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spielispieli"
+version = "0.1.0"
+dependencies = ["numpy", "pygame"]
+requires-python = ">=3.10"
+authors = [{ name = "Thomas Thron", email = "throni3git@gmail.com" }]
+maintainers = [{ name = "Thomas Thron", email = "throni3git@gmail.com" }]
+description = "pygame playground for me"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+keywords = ["pygame", "game", "stupid"]
+
+[project.urls]
+Repository = "https://github.com/throni3git/spielispieli.git"
+"Bug Tracker" = "https://github.com/throni3git/spielispieli/issues"
