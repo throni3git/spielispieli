@@ -30,7 +30,10 @@ def run_loop(surface_screen: pygame.Surface,
 
     held_keys = []
     held_inputs = {}
-    player_pos = Vec2(0, 0)
+    size_screen = surface_screen.get_size()
+    text = fonts["big"].render("+", True, (255, 255, 255))
+    size_text = text.get_size()
+    player_pos = Vec2(size_screen[0]//2-size_text[0]//2, size_screen[1]//2-size_text[1]//2)
     velocity = 100
     FPS = 60
     blink_velocity = 2
