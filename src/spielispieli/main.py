@@ -36,6 +36,11 @@ def run_loop(surface_screen: pygame.Surface,
     blink_velocity = 2
     old = time.time_ns()
     time_since_start_of_program = 0
+    jump_active = False
+    jump_count = 0
+    jump_duration = 0.5
+    jump_height = 100
+
     running = True
     while running:
 
@@ -60,6 +65,9 @@ def run_loop(surface_screen: pygame.Surface,
                 key_name = pygame.key.name(event.key)
                 held_keys.append(key_name)
                 held_inputs[f"{key_name}_held"] = 1.0
+                if "space" in key_name:
+                    jump_active = True
+                    jump_count = 0
             if event.type == pygame.KEYUP:
                 key_name = pygame.key.name(event.key)
                 held_keys.remove(key_name)
@@ -78,7 +86,7 @@ def run_loop(surface_screen: pygame.Surface,
         if "d" in held_keys:
             player_pos.x += delta
         if "a" in held_keys:
-            player_pos.x -= delta
+            player_pos.x -= delta        
 
         # center background
         pos_background = (
@@ -102,10 +110,18 @@ def run_loop(surface_screen: pygame.Surface,
         player_pos.y = max(player_pos.y, 0)
         player_pos.y = min(player_pos.y, size_screen[1] - size_text[1])        
 
-        pos = (player_pos.x, size_screen[1] - size_text[1] - int(player_pos.y))
+        jump_player_pos = Vec2(player_pos.x, player_pos.y)
+        if jump_active:
+            normalized_jump_count = jump_count / jump_duration * 2
+            jump_player_pos.y += (-normalized_jump_count**2 + 2*normalized_jump_count) * jump_height
+        jump_count += time_passed
+        if jump_count > jump_duration:
+            jump_active = False
+
+        pos = (player_pos.x, size_screen[1] - size_text[1] - int(jump_player_pos.y))
         rect_background = pygame.Rect(
-            player_pos.x,
-            size_screen[1] - size_text[1] - int(player_pos.y),
+            jump_player_pos.x,
+            size_screen[1] - size_text[1] - int(jump_player_pos.y),
             size_text[0],
             size_text[1],
         )
