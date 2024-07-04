@@ -39,7 +39,7 @@ def run_loop(surface_screen: pygame.Surface,
     jump_active = False
     jump_count = 0
     jump_duration = 0.5
-    jump_height = 100
+    jump_max_height = 100
 
     running = True
     while running:
@@ -111,21 +111,26 @@ def run_loop(surface_screen: pygame.Surface,
         player_pos.y = min(player_pos.y, size_screen[1] - size_text[1])        
 
         jump_player_pos = Vec2(player_pos.x, player_pos.y)
+        jump_height = 0
         if jump_active:
             normalized_jump_count = jump_count / jump_duration * 2
-            jump_player_pos.y += (-normalized_jump_count**2 + 2*normalized_jump_count) * jump_height
+            jump_height = (-normalized_jump_count**2 + 2*normalized_jump_count) * jump_max_height
+            jump_player_pos.y += jump_height
         jump_count += time_passed
         if jump_count > jump_duration:
             jump_active = False
 
         pos = (player_pos.x, size_screen[1] - size_text[1] - int(jump_player_pos.y))
         rect_background = pygame.Rect(
-            jump_player_pos.x,
-            size_screen[1] - size_text[1] - int(jump_player_pos.y),
+            player_pos.x,
+            size_screen[1] - size_text[1] - int(player_pos.y),
             size_text[0],
             size_text[1],
         )
-        pygame.draw.rect(surface_screen, (1, 1, 1), rect_background)
+        surface_shadow = pygame.Surface((size_text[0], 3))
+        surface_shadow.set_alpha(int(0.5*(1-jump_height/jump_max_height + 0.1)*255))
+        surface_shadow.fill((0,0,0))
+        surface_screen.blit(surface_shadow, (player_pos.x, size_screen[1] - int(player_pos.y)))
         surface_screen.blit(text, pos)
 
         text = fonts["default"].render(f"{time_since_start_of_program:.2f}", True, (255, 255, 255))
