@@ -69,6 +69,7 @@ def run_loop(surface_screen: pygame.Surface,
                 if held_key_name in held_inputs:
                     del held_inputs[held_key_name]
 
+        # move player
         delta = time_passed * velocity
         if "w" in held_keys:
             player_pos.y += delta
@@ -79,6 +80,7 @@ def run_loop(surface_screen: pygame.Surface,
         if "a" in held_keys:
             player_pos.x -= delta
 
+        # center background
         pos_background = (
             size_screen[0]//2-assets["background"].get_size()[0]//2,
             size_screen[1]//2-assets["background"].get_size()[1]//2
@@ -92,7 +94,22 @@ def run_loop(surface_screen: pygame.Surface,
         aaaaarg = 2*np.pi * blink_velocity * time_since_start_of_program
         alpha = (np.sin(aaaaarg)*0.5+0.5) * 256
         text.set_alpha(int(alpha))
-        pos = (player_pos.x+3, surface_screen.get_size()[1] - fonts["big"].get_linesize() - int(player_pos.y))
+        size_text = text.get_size()
+        
+        # limit player movement
+        player_pos.x = max(player_pos.x, 0)
+        player_pos.x = min(player_pos.x, size_screen[0] - size_text[0])
+        player_pos.y = max(player_pos.y, 0)
+        player_pos.y = min(player_pos.y, size_screen[1] - size_text[1])        
+
+        pos = (player_pos.x, size_screen[1] - size_text[1] - int(player_pos.y))
+        rect_background = pygame.Rect(
+            player_pos.x,
+            size_screen[1] - size_text[1] - int(player_pos.y),
+            size_text[0],
+            size_text[1],
+        )
+        pygame.draw.rect(surface_screen, (1, 1, 1), rect_background)
         surface_screen.blit(text, pos)
 
         text = fonts["default"].render(f"{time_since_start_of_program:.2f}", True, (255, 255, 255))
