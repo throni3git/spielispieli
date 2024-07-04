@@ -4,7 +4,11 @@
       "path": "."
     }
   ],
-  "settings": {},
+  "settings": {
+    "editor.formatOnSave": true,
+    "autopep8.args": ["max-line-length=120"],
+    "editor.rulers": [120]
+  },
   "launch": {
     "version": "0.2.0",
     "configurations": [
