@@ -42,7 +42,7 @@ def run_loop(surface_screen: pygame.Surface,
     jump_active = False
     jump_count = 0
     jump_duration = 0.5
-    jump_max_height = 100
+    jump_max_height = 50
 
     running = True
     while running:
@@ -131,7 +131,7 @@ def run_loop(surface_screen: pygame.Surface,
             size_text[1],
         )
         surface_shadow = pygame.Surface((size_text[0], 3))
-        surface_shadow.set_alpha(int(0.5*(1-jump_height/jump_max_height + 0.1)*255))
+        surface_shadow.set_alpha(int(0.3*(1-jump_height/jump_max_height + 0.2)*255))
         surface_shadow.fill((0,0,0))
         surface_screen.blit(surface_shadow, (player_pos.x, size_screen[1] - int(player_pos.y)))
         surface_screen.blit(text, pos)
