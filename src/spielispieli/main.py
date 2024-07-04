@@ -19,7 +19,7 @@ def init_game() -> None:
 
 def init_screen(size: tuple[int, int]) -> tuple[pygame.Surface, pygame.Surface]:
 
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     background = pygame.image.load(Path(__file__).parent / "resources/polyggle.png")
     background.set_alpha(int(0.2*256))
     return screen, background
@@ -44,10 +44,18 @@ def run_loop(surface_screen: pygame.Surface,
         old = now
         time_since_start_of_program += time_passed
 
+        size_screen = surface_screen.get_size()
+        
+        surface_screen.fill((44, 44, 44))
+
         inputs = {}
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.VIDEORESIZE:
+                # surface_screen.blit(pygame.transform.scale(assets["background"], event.dict["size"]), (0,0))
+                # pygame.display.update()
+                pass
             if event.type == pygame.KEYDOWN:
                 key_name = pygame.key.name(event.key)
                 held_keys.append(key_name)
@@ -71,8 +79,11 @@ def run_loop(surface_screen: pygame.Surface,
         if "a" in held_keys:
             player_pos.x -= delta
 
-        surface_screen.fill((44, 44, 44))
-        surface_screen.blit(assets["background"], (64, 64))
+        pos_background = (
+            size_screen[0]//2-assets["background"].get_size()[0]//2,
+            size_screen[1]//2-assets["background"].get_size()[1]//2
+        )
+        surface_screen.blit(assets["background"], pos_background)
 
         text = fonts["big"].render(", ".join(held_keys), True, (255, 255, 255))
         surface_screen.blit(text, (5, 5))
